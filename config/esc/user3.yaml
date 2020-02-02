@@ -1,0 +1,7 @@
+apiVersion: esc.k06.in/v1alpha1
+kind: Userland
+metadata:
+  name: user3
+spec:
+  # Add fields here
+  templateName: template-sample

@@ -1,0 +1,19 @@
+apiVersion: esc.k06.in/v1alpha1
+kind: Template
+metadata:
+  name: vscode
+spec:
+  # Add fields here
+  template:
+    spec:
+      containers:
+      - image: codercom/code-server:v2 
+        name: code-server
+        args: ["--auth","none"]
+  service:
+    ports:
+    - name: 80-80
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+
