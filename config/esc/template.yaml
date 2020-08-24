@@ -3,7 +3,6 @@ kind: Template
 metadata:
   name: vscode
 spec:
-  # Add fields here
   template:
     spec:
       containers:
