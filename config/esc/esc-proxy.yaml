@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: esc-proxy
+  namespace: default
+---
+# permissions to do edit userlands.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: userland-editor-role
+rules:
+- apiGroups:
+  - esc.k06.in
+  resources:
+  - userlands
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - esc.k06.in
+  resources:
+  - userlands/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: userland-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: userland-editor-role
+subjects:
+- kind: ServiceAccount
+  name: esc-proxy
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: esc-proxy
+  name: esc-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: esc-proxy
+  template:
+    metadata:
+      labels:
+        app: esc-proxy
+    spec:
+      containers:
+      - env:
+        - name: TARGET_NAMESPACE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LOCAL_CLUSTER_DOMAIN
+          value: cluster.local
+        - name: USERNAME_HEADER
+          value: X-Auth-Request-User
+        - name: ESC_TEMPLATE_NAME
+          value: vscode # template name on esc
+        image: quay.io/koba1t/esc-proxy:v0.1.0
+        imagePullPolicy: Always
+        name: esc-proxy
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      serviceAccountName: esc-proxy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: esc-proxy
+  name: esc-proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: esc-proxy
