@@ -9,6 +9,12 @@ spec:
       - image: codercom/code-server:v2
         name: code-server
         args: ["--auth","none"]
+        volumeMounts:
+        - name: user-storage
+          mountPath: /home/coder/project
+      volumes:
+      - name: user-storage
+        emptyDir: {}
   service:
     ports:
     - name: 80-80
