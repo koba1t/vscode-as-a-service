@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-      - image: codercom/code-server:v2 
+      - image: codercom/code-server:v2
         name: code-server
         args: ["--auth","none"]
   service:
@@ -15,4 +15,3 @@ spec:
       port: 80
       protocol: TCP
       targetPort: 8080
-
