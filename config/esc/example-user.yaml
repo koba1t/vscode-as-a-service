@@ -2,5 +2,6 @@ apiVersion: esc.k06.in/v1alpha1
 kind: Userland
 metadata:
   name: koba1t ##set github username
+  namespace: code-editor
 spec:
   templateName: vscode

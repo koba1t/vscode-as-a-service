@@ -2,11 +2,12 @@ apiVersion: esc.k06.in/v1alpha1
 kind: Template
 metadata:
   name: vscode
+  namespace: code-editor
 spec:
   template:
     spec:
       containers:
-      - image: codercom/code-server:v2
+      - image: codercom/code-server:3.4.1
         name: code-server
         args: ["--auth","none"]
         volumeMounts:
